@@ -1,6 +1,12 @@
 from django.shortcuts import render,redirect,get_object_or_404
+from django.views.generic import ListView
 from .models import Post
 # Create your views here.
+
+class ListView(ListView):
+    queryset= Post.objects.all().order_by('name') #사용할 모델 
+    template_name = 'phone/list.html' # 이 뷰에서 사용할 템플릿 파일의 경로 지정
+    context_object_name = 'posts' #템플릿에서 사용할 객체의 이름 설정
 
 def list(request):
     posts = Post.objects.all().order_by('name')

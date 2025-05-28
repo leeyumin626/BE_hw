@@ -11,7 +11,9 @@ def list(request):
 
     if category_id:
         category = get_object_or_404(Category, id = category_id)
-        posts = category.posts.all().order_by('-id')
+        posts = Post.objects.filter(category=category).order_by('-id') 
+        #왼쪽 `category`: → `Post` 모델 안의 ForeignKey 필드 이름
+        #오른쪽 `category`: → `Category` 모델의 인스턴스(객체) 하나
     else:
         posts = Post.objects.all().order_by('-id') #id 역순으로 가져오겠다는 뜻. 디비 (최신글부터 볼 수 있음)
     
@@ -79,7 +81,7 @@ def like(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     user= request.user
 
-    if user in post.like.all(): #사용자가 좋아요를 눌렀는지 확인하는 함수
+    if post in user.like_posts.all(): #사용자가 좋아요를 눌렀는지 확인하는 함수
         post.like.remove(user) #눌렀으면 취소한다 ( 두번 누르면 취소 )
     else:
         post.like.add(user)
